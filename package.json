@@ -1,0 +1,85 @@
+{
+  "name": "generator-components-react",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "MIT",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "type": "module",
+  "files": [
+    "cjs",
+    "esm"
+  ],
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./cjs/index.js"
+    },
+    "./cjs": {
+      "require": "./cjs/index.js"
+    },
+    "./cjs/index": {
+      "require": "./cjs/index.js"
+    },
+    "./cjs/index.js": {
+      "require": "./cjs/index.js"
+    },
+    "./index": {
+      "import": "./index.js",
+      "require": "./cjs/index.js"
+    },
+    "./index.js": {
+      "import": "./index.js",
+      "require": "./cjs/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "prebuild": "npm run clean",
+    "build": "rollup -c rollup.config.js",
+    "clean": "rm -rf cjs esm dist umd",
+    "debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "prepublishOnly": "npm run test && npm run build",
+    "test": "jest --config jest.config.cjs --color --no-cache",
+    "typecheck": "tsc --noEmit"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/react": "^12.0.0",
+    "@types/jest": "^26.0.24",
+    "@types/react": "^17.0.15",
+    "@types/react-dom": "^17.0.9",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "jest": "^27.0.6",
+    "jest-environment-jsdom": "^27.0.6",
+    "prettier": "^2.3.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rollup": "^2.55.1",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "ts-jest": "^27.0.4",
+    "ts-transform-import-path-rewrite": "^0.3.0",
+    "typescript": "^4.3.5"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2"
+  }
+}

@@ -1,3 +1,4 @@
+// import React from "react";
 import React, {useState} from "react";
 import {Menu} from "antd";
 import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
@@ -18,6 +19,7 @@ import Timer from "./examples/Timer";
 import RandomDogApp from "./examples/DogApp";
 import AuthContainer from "./auth/AuthContainer";
 import AppLayout from "./app/AppLayout";
+import TagLifecycle from "./examples/TagLifecycle";
 
 export default function App() {
 	const [timerKey, setTimerKey] = useState(0);
@@ -25,9 +27,10 @@ export default function App() {
 	return (
 		<Router>
 			<AppLayout
-				menuItems={[
+				// TODO why does this crash if its not a function?
+				menuItems={() => [
 					<Menu.Item key="1" icon={<UserOutlined />}>
-						<Link to="/auth">Auth Example</Link>
+						<Link to="/">Auth Example</Link>
 					</Menu.Item>,
 					<Menu.Item key="2" icon={<VideoCameraOutlined />}>
 						<Link to="/dog-app">Dog App</Link>
@@ -38,7 +41,7 @@ export default function App() {
 				]}
 			>
 				<Switch>
-					<Route path="/auth" component={AuthContainer} />
+					<Route path="/" exact component={AuthContainer} />
 					<Route path="/dog-app" component={RandomDogApp} />
 					<Route
 						path="/other"
@@ -51,6 +54,9 @@ export default function App() {
 										wrapper
 									</p>
 									<Greeting />
+
+									<h1>Mouse Events</h1>
+									<TagLifecycle />
 
 									<h1>Render a Promise</h1>
 									<p>

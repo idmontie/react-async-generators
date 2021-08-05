@@ -9,7 +9,7 @@ const {Header, Sider, Content} = Layout;
 
 interface AppLayoutProps {
 	children?: React.ReactNode;
-	menuItems: React.ReactNode[];
+	menuItems: () => React.ReactNode[];
 }
 
 async function* AppLayout(
@@ -28,14 +28,23 @@ async function* AppLayout(
 		const user = await currentUser.next();
 
 		yield (
-			<Layout id="components-layout-demo-custom-trigger">
+			<Layout
+				id="components-layout-demo-custom-trigger"
+				style={{height: "100vh"}}
+			>
 				<Sider trigger={null} collapsible collapsed={collapsed.get()}>
 					<div className="logo" />
 					<Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-						{menuItems}
+						{menuItems()}
 					</Menu>
 				</Sider>
-				<Layout className="site-layout">
+				<Layout
+					className="site-layout"
+					style={{
+						maxHeight: "100vh",
+						overflow: "hidden",
+					}}
+				>
 					<Header className="site-layout-background" style={{padding: 0}}>
 						{React.createElement(
 							collapsed.get() ? MenuUnfoldOutlined : MenuFoldOutlined,
@@ -45,7 +54,14 @@ async function* AppLayout(
 							},
 						)}
 					</Header>
-					<Content style={{margin: "0 16px"}}>
+					<Content
+						style={{
+							margin: "0 16px",
+							flex: 1,
+							display: "flex",
+							flexDirection: "column",
+						}}
+					>
 						<Breadcrumb style={{margin: "16px 0"}}>
 							<Breadcrumb.Item>User</Breadcrumb.Item>
 							<Breadcrumb.Item>
@@ -54,9 +70,21 @@ async function* AppLayout(
 						</Breadcrumb>
 						<div
 							className="site-layout-background"
-							style={{padding: 24, minHeight: 360}}
+							style={{
+								padding: 24,
+								minHeight: 360,
+								flex: 1,
+								marginBottom: "16px",
+							}}
 						>
-							{children}
+							<div
+								style={{
+									overflow: "auto",
+									height: "100%",
+								}}
+							>
+								{children}
+							</div>
 						</div>
 					</Content>
 				</Layout>

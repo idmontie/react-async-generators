@@ -8,6 +8,8 @@ import React, {
 import {isIterator} from "./utilities/isIterator";
 import {isPromise} from "./utilities/isPromise";
 import {getDisplayName} from "./utilities/getDisplayName";
+import {omit} from "./utilities/omit";
+import {safeStringify} from "./utilities/safeStringify";
 import {Render, AnyGenerator} from "./types";
 
 export interface AsyncProps {
@@ -20,36 +22,6 @@ export interface AsyncProps {
 type MountState = "beforemount" | "unmounted" | "mounted";
 
 type ReturnType = ReactElement | JSX.Element;
-
-function omit(obj: {[key: string]: any}, ...keys: string[]) {
-	const result: any = {};
-	Object.entries(obj).forEach(([key, value]: [string, any]) => {
-		if (keys.indexOf(key) === -1) {
-			result[key] = value;
-		}
-	});
-
-	return result;
-}
-
-function safeStringify(value: any, indent: number = 2): string {
-	try {
-		return JSON.stringify(value);
-	} catch (e) {
-		let cache: any[] = [];
-		const retVal = JSON.stringify(
-			value,
-			(key, value) =>
-				typeof value === "object" && value !== null
-					? cache.includes(value)
-						? undefined // Duplicate reference found, discard key
-						: cache.push(value) && value // Store value in our collection
-					: value,
-			indent,
-		);
-		return retVal;
-	}
-}
 
 const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 	const maybeIteratorRef = useRef<AnyGenerator<ReturnType> | null>(null);
@@ -113,7 +85,11 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 		// Handle generator components
 		if (arity <= 1) {
 			for await (let result of iterator) {
-				// Iterate until done
+				// Iterate until done while not unmounted
+				if (hasMounted.current === "unmounted") {
+					break;
+				}
+
 				if (step(result)) {
 					break;
 				}
@@ -132,6 +108,7 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 	]);
 
 	useEffect(() => {
+		hasMounted.current = "beforemount";
 		iterate();
 
 		return () => {

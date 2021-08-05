@@ -38,4 +38,28 @@ describe("children", () => {
 		await waitFor(() => expect(screen.getAllByText("Hello 2")).toHaveLength(1));
 		expect(screen.getAllByText("Hello 2")).toHaveLength(1);
 	});
+
+	it("passes through rendered components", async () => {
+		const SubComponent = ({message}: {message: string}) => <div>{message}</div>;
+		const Parent = asyncGen(function* Parent({
+			items,
+		}: {
+			items: React.ReactNode[];
+		}) {
+			yield <div>{items}</div>;
+		});
+
+		render(
+			<Parent
+				items={[
+					<SubComponent key="1" message="Hello" />,
+					<SubComponent key="2" message="Hello 2" />,
+				]}
+			/>,
+		);
+
+		await waitFor(() => expect(screen.getAllByText("Hello")).toHaveLength(1));
+		expect(screen.getAllByText("Hello")).toHaveLength(1);
+		expect(screen.getAllByText("Hello 2")).toHaveLength(1);
+	});
 });

@@ -1,6 +1,6 @@
 import React from "react";
 import {render, waitFor} from "@testing-library/react";
-import Async from "./Async";
+import AsyncGenerator from "./AsyncGenerator";
 
 describe("sync function component", () => {
 	test("basic", async () => {
@@ -9,7 +9,7 @@ describe("sync function component", () => {
 			return <span>{message}</span>;
 		}
 
-		const {container} = render(<Async render={Component} message="Hello" />);
+		const {container} = render(<AsyncGenerator render={Component} message="Hello" />);
 		expect(container.innerHTML).toEqual("");
 
 		await waitFor(
@@ -26,14 +26,14 @@ describe("sync function component", () => {
 		}
 
 		const {container, rerender} = render(
-			<Async render={Component} message="Hello" />,
+			<AsyncGenerator render={Component} message="Hello" />,
 		);
 		expect(container.innerHTML).toEqual("");
 		await waitFor(
 			() => container.querySelector("span")!.textContent === "Hello",
 		);
 		expect(container.innerHTML).toEqual("<span>Hello</span>");
-		rerender(<Async render={Component} message="World" />);
+		rerender(<AsyncGenerator render={Component} message="World" />);
 		await waitFor(
 			() => container.querySelector("span")!.textContent === "World",
 		);

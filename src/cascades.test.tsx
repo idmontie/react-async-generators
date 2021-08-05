@@ -1,6 +1,6 @@
 import React from "react";
 import {render, screen} from "@testing-library/react";
-import Async from "./Async";
+import AsyncGenerator from "./AsyncGenerator";
 
 describe("cascades", () => {
 	test("sync function calls refresh directly", async () => {
@@ -11,9 +11,12 @@ describe("cascades", () => {
 
 		const mock = jest.spyOn(console, "error").mockImplementation();
 		try {
-			render(<Async render={Component} />);
+			render(<AsyncGenerator render={Component} />);
 			expect(await screen.findAllByText("Hello")).toHaveLength(1);
 			expect(mock).toHaveBeenCalled();
+			expect(mock).toHaveBeenCalledWith(
+				"Called refresh before component mounted",
+			);
 		} finally {
 			mock.mockRestore();
 		}
@@ -27,7 +30,7 @@ describe("cascades", () => {
 
 		const mock = jest.spyOn(console, "error").mockImplementation();
 		try {
-			render(<Async render={Component} />);
+			render(<AsyncGenerator render={Component} />);
 			expect(await screen.findAllByText("Hello")).toHaveLength(1);
 			expect(mock).toHaveBeenCalled();
 		} finally {
@@ -45,7 +48,7 @@ describe("cascades", () => {
 
 		const mock = jest.spyOn(console, "error").mockImplementation();
 		try {
-			render(<Async render={Component} />);
+			render(<AsyncGenerator render={Component} />);
 			expect(await screen.findAllByText("Hello")).toHaveLength(1);
 			expect(mock).toHaveBeenCalled();
 		} finally {
@@ -65,7 +68,7 @@ describe("cascades", () => {
 
 		const mock = jest.spyOn(console, "error").mockImplementation();
 		try {
-			render(<Async render={Component} />);
+			render(<AsyncGenerator render={Component} />);
 			expect(await screen.findAllByText("Hello")).toHaveLength(1);
 			await new Promise((resolve) => setTimeout(resolve, 0));
 			expect(await screen.findAllByText("Hello")).toHaveLength(1);

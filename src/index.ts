@@ -1,2 +1,2 @@
-export {default as Async} from "./Async";
-export {default} from "./Async";
+export {default as Async} from "./AsyncGenerator";
+export {default} from "./AsyncGenerator";

@@ -21,6 +21,17 @@ type MountState = "beforemount" | "unmounted" | "mounted";
 
 type ReturnType = ReactElement | JSX.Element;
 
+function omit(obj: {[key: string]: any}, ...keys: string[]) {
+	const result: any = {};
+	Object.entries(obj).forEach(([key, value]: [string, any]) => {
+		if (keys.indexOf(key) === -1) {
+			result[key] = value;
+		}
+	});
+
+	return result;
+}
+
 const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 	const maybeIteratorRef = useRef<AnyGenerator<ReturnType> | null>(null);
 	const [comp, setComp] = useState<ReturnType | null>(null);
@@ -93,7 +104,13 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 			let result = await iterator.next();
 			step(result);
 		}
-	}, [render, step, refresh, JSON.stringify(props)]);
+	}, [
+		render,
+		step,
+		refresh,
+		JSON.stringify(omit(props, "children")),
+		props.children,
+	]);
 
 	useEffect(() => {
 		iterate();

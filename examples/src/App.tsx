@@ -10,12 +10,13 @@ import IPAddress from "./examples/AsyncIpAddress";
 import Timer from "./examples/Timer";
 import RandomDogApp from "./examples/DogApp";
 import AuthContainer from "./auth/AuthContainer";
+import AppLayout from "./app/AppLayout";
 
 export default function App() {
 	const [timerKey, setTimerKey] = useState(0);
 
 	return (
-		<div className="App">
+		<AppLayout>
 			<h1>Login</h1>
 			<AuthContainer />
 
@@ -51,6 +52,6 @@ export default function App() {
 			<Timer key={timerKey} />
 
 			<button onClick={() => setTimerKey(Date.now())}>Reset Timer</button>
-		</div>
+		</AppLayout>
 	);
 }

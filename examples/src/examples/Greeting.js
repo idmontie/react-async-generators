@@ -1,5 +1,8 @@
 import React from "react";
+import {asyncGen} from "react-async-generators";
 
-export default function Greeting({name = "World"}) {
+function Greeting({name = "World"}) {
 	return <div>Hello {name}</div>;
 }
+
+export default asyncGen(Greeting);

@@ -1,6 +1,7 @@
 import React from "react";
+import {asyncGen} from "react-async-generators";
 
-export default async function* FormSubmit(_, refresh) {
+async function* FormSubmit(_, refresh) {
 	let status = "";
 
 	const handleSubmit = (e) => {
@@ -25,3 +26,5 @@ export default async function* FormSubmit(_, refresh) {
 		);
 	}
 }
+
+export default asyncGen(FormSubmit);

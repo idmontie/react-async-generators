@@ -1,4 +1,5 @@
 import React from "react";
+import {asyncGen} from "react-async-generators";
 import messagePipe from "../api/messagePipe";
 
 async function* MessagePipe() {
@@ -18,4 +19,4 @@ async function* MessagePipe() {
 	}
 }
 
-export default MessagePipe;
+export default asyncGen(MessagePipe);

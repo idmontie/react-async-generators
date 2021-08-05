@@ -1,4 +1,5 @@
 import React from "react";
+import {asyncGen} from "react-async-generators";
 import wait from "../utilities/wait";
 
 const LazyRender = async ({message}) => {
@@ -7,4 +8,4 @@ const LazyRender = async ({message}) => {
 	return <div>{message}</div>;
 };
 
-export default LazyRender;
+export default asyncGen(LazyRender);

@@ -1,11 +1,11 @@
 import React, {Fragment} from "react";
-import Async from "react-async-generators";
+import {asyncGen} from "react-async-generators";
 
 function LoadingIndicator() {
 	return <div>Fetching a good boy...</div>;
 }
 
-async function* RandomDog({throttle = false}) {
+const RandomDog = asyncGen(async function* RandomDog({throttle = false}) {
 	yield <LoadingIndicator />;
 	const res = await fetch("https://dog.ceo/api/breeds/image/random");
 	const data = await res.json();
@@ -19,9 +19,9 @@ async function* RandomDog({throttle = false}) {
 			<img src={data.message} alt="A Random Dog" width="300" />
 		</a>
 	);
-}
+});
 
-export default function* RandomDogApp(_, refresh) {
+export default asyncGen(function* RandomDogApp(_, refresh) {
 	let throttle = false;
 
 	const handleClick = () => {
@@ -35,8 +35,8 @@ export default function* RandomDogApp(_, refresh) {
 				<div>
 					<button onClick={handleClick}>Show me another dog.</button>
 				</div>
-				<Async render={RandomDog} throttle={throttle} />
+				<RandomDog throttle={throttle} />
 			</Fragment>
 		);
 	}
-}
+});

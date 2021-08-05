@@ -1,6 +1,7 @@
 import React from "react";
+import {asyncGen} from "react-async-generators";
 
-export default function* Timer(_, refresh) {
+function* Timer(_, refresh) {
 	let seconds = 0;
 
 	const interval = setInterval(() => {
@@ -16,3 +17,5 @@ export default function* Timer(_, refresh) {
 		clearInterval(interval);
 	}
 }
+
+export default asyncGen(Timer);

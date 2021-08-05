@@ -1,4 +1,2 @@
-.App {
-  font-family: sans-serif;
-  text-align: center;
-}
+@import '~antd/dist/antd.css';
+

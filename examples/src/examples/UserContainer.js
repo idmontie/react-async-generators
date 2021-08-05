@@ -1,4 +1,5 @@
 import React from "react";
+import {asyncGen} from "react-async-generators";
 import fakeApi from "../api/fakeApi";
 
 async function* UserContainer({id, injectApi}) {
@@ -17,4 +18,4 @@ async function* UserContainer({id, injectApi}) {
 	}
 }
 
-export default UserContainer;
+export default asyncGen(UserContainer);

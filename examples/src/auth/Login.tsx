@@ -1,5 +1,5 @@
 import React from "react";
-import {asyncGen} from "react-async-generators";
+import {asyncGen, mutable} from "react-async-generators";
 import {Form, Input, Button} from "antd";
 import {User} from "./types";
 
@@ -23,11 +23,10 @@ async function loginAsUser(username: string, _: string): Promise<User> {
  * Example of how setState would work
  */
 async function* Login({onLogin}: LoginProps, refresh: () => void) {
-	let loading = false;
+	let loading = mutable<boolean>(false, refresh);
 
 	const onFinish = async (values: any) => {
-		loading = true;
-		refresh();
+		loading.set(true);
 
 		try {
 			const user = await loginAsUser(values.username, values.password);
@@ -35,8 +34,7 @@ async function* Login({onLogin}: LoginProps, refresh: () => void) {
 		} catch (e) {
 			console.error(e);
 		} finally {
-			loading = false;
-			refresh();
+			loading.set(false);
 		}
 	};
 
@@ -60,7 +58,7 @@ async function* Login({onLogin}: LoginProps, refresh: () => void) {
 				</Form.Item>
 
 				<Form.Item wrapperCol={{offset: 8, span: 16}}>
-					<Button type="primary" htmlType="submit" loading={loading}>
+					<Button type="primary" htmlType="submit" loading={loading.get()}>
 						Submit
 					</Button>
 				</Form.Item>

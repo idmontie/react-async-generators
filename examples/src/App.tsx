@@ -28,7 +28,7 @@ export default function App() {
 		<Router>
 			<AppLayout
 				// TODO why does this crash if its not a function?
-				menuItems={() => [
+				menuItems={[
 					<Menu.Item key="1" icon={<UserOutlined />}>
 						<Link to="/">Auth Example</Link>
 					</Menu.Item>,

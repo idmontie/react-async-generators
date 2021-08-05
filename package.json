@@ -1,6 +1,6 @@
 {
   "name": "react-async-generators",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Use async generators as components in React",
   "author": "@idmontie",
   "license": "MIT",

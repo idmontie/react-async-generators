@@ -49,6 +49,11 @@ const App = () => (
 );
 ```
 
+## Examples
+
+There are a set of examples showing different types of components in the `./examples` folder
+using a create-react-app application.
+
 ## Drawbacks
 
 * Still looking into how you would blend async generators and hooks together

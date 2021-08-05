@@ -3,8 +3,6 @@ cjs
 esm
 .codesandbox
 
-# eventually track examples
-examples
 # stryker temp files
 .stryker-tmp
 reports

@@ -1,84 +1,68 @@
 import React from "react";
-// import {Layout} from "antd";
-import {asyncGen} from "react-async-generators";
+import {Layout, Menu, Breadcrumb} from "antd";
+import {mutable, asyncGen} from "react-async-generators";
+import {MenuUnfoldOutlined, MenuFoldOutlined} from "@ant-design/icons";
+import "./AppLayout.css";
+import {getCurrentUser} from "../auth/store/Users";
+
+const {Header, Sider, Content} = Layout;
 
 interface AppLayoutProps {
 	children?: React.ReactNode;
+	menuItems: React.ReactNode[];
 }
 
-function* AppLayout({children}: AppLayoutProps) {
+async function* AppLayout(
+	{children, menuItems}: AppLayoutProps,
+	refresh: () => void,
+) {
+	let collapsed = mutable<boolean>(false, refresh);
+
+	const onClickToggle = () => {
+		collapsed.set(!collapsed.get());
+	};
+
+	const currentUser = getCurrentUser(refresh);
+
 	while (true) {
-		yield <div>{children}</div>;
+		const user = await currentUser.next();
+
+		yield (
+			<Layout id="components-layout-demo-custom-trigger">
+				<Sider trigger={null} collapsible collapsed={collapsed.get()}>
+					<div className="logo" />
+					<Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+						{menuItems}
+					</Menu>
+				</Sider>
+				<Layout className="site-layout">
+					<Header className="site-layout-background" style={{padding: 0}}>
+						{React.createElement(
+							collapsed.get() ? MenuUnfoldOutlined : MenuFoldOutlined,
+							{
+								className: "trigger",
+								onClick: onClickToggle,
+							},
+						)}
+					</Header>
+					<Content style={{margin: "0 16px"}}>
+						<Breadcrumb style={{margin: "16px 0"}}>
+							<Breadcrumb.Item>User</Breadcrumb.Item>
+							<Breadcrumb.Item>
+								{user?.value?.name ?? "Anonymous"}
+							</Breadcrumb.Item>
+						</Breadcrumb>
+						<div
+							className="site-layout-background"
+							style={{padding: 24, minHeight: 360}}
+						>
+							{children}
+						</div>
+					</Content>
+				</Layout>
+			</Layout>
+		);
 	}
 }
 
 export default asyncGen(AppLayout);
-
-// import React from "react";
-// import {Layout, Menu} from "antd";
-// import {mutable, asyncGen} from "react-async-generators";
-// import {
-// 	MenuUnfoldOutlined,
-// 	MenuFoldOutlined,
-// 	UserOutlined,
-// 	VideoCameraOutlined,
-// 	UploadOutlined,
-// } from "@ant-design/icons";
-
-// const {Header, Sider, Content} = Layout;
-
-// interface AppLayoutProps {
-// 	children?: React.ReactNode;
-// }
-
-// function* AppLayout({children}: AppLayoutProps, refresh: () => void) {
-// 	let collapsed = mutable<boolean>(false, refresh);
-
-// 	const onClickToggle = () => {
-// 		collapsed.set(!collapsed.get());
-// 	};
-
-// 	while (true) {
-// 		yield (
-// 			<Layout>
-// 				<Sider trigger={null} collapsible collapsed={collapsed.get()}>
-// 					<div className="logo" />
-// 					<Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-// 						<Menu.Item key="1" icon={<UserOutlined />}>
-// 							nav 1
-// 						</Menu.Item>
-// 						<Menu.Item key="2" icon={<VideoCameraOutlined />}>
-// 							nav 2
-// 						</Menu.Item>
-// 						<Menu.Item key="3" icon={<UploadOutlined />}>
-// 							nav 3
-// 						</Menu.Item>
-// 					</Menu>
-// 				</Sider>
-// 				<Layout className="site-layout">
-// 					<Header className="site-layout-background" style={{padding: 0}}>
-// 						{React.createElement(
-// 							collapsed.get() ? MenuUnfoldOutlined : MenuFoldOutlined,
-// 							{
-// 								className: "trigger",
-// 								onClick: onClickToggle,
-// 							},
-// 						)}
-// 					</Header>
-// 					<Content
-// 						className="site-layout-background"
-// 						style={{
-// 							margin: "24px 16px",
-// 							padding: 24,
-// 							minHeight: 280,
-// 						}}
-// 					>
-// 						{children}
-// 					</Content>
-// 				</Layout>
-// 			</Layout>
-// 		);
-// 	}
-// }
-
-// export default asyncGen(AppLayout);

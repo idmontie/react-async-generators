@@ -1,24 +1,21 @@
 import React from "react";
-import {asyncGen, mutable} from "react-async-generators";
+import {asyncGen} from "react-async-generators";
 import Login from "./Login";
-import {User} from "./types";
+import {getCurrentUser} from "./store/Users";
 
 async function* AuthContainer(_: {}, refresh: () => void) {
-	let user = mutable<User | null>(null, refresh);
-
-	const onLogin = (u: User) => {
-		user.set(u);
-	};
+	const currentUser = getCurrentUser(refresh);
 
 	while (true) {
-		const u = user.get();
-		if (!u) {
-			yield <Login onLogin={onLogin} />;
+		const user = await currentUser.next();
+
+		if (!user.value) {
+			yield <Login />;
 		} else {
 			yield (
 				<div>
-					<div>Email: {u.username}</div>
-					<div>Name: {u.name}</div>
+					<div>Email: {user.value?.username}</div>
+					<div>Name: {user.value?.name}</div>
 				</div>
 			);
 		}

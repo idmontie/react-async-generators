@@ -1,4 +1,11 @@
 import React, {useState} from "react";
+import {Menu} from "antd";
+import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
+import {
+	UserOutlined,
+	VideoCameraOutlined,
+	UploadOutlined,
+} from "@ant-design/icons";
 import "./styles.css";
 import Greeting from "./examples/Greeting";
 import UserContainer from "./examples/UserContainer";
@@ -16,42 +23,72 @@ export default function App() {
 	const [timerKey, setTimerKey] = useState(0);
 
 	return (
-		<AppLayout>
-			<h1>Login</h1>
-			<AuthContainer />
+		<Router>
+			<AppLayout
+				menuItems={[
+					<Menu.Item key="1" icon={<UserOutlined />}>
+						<Link to="/auth">Auth Example</Link>
+					</Menu.Item>,
+					<Menu.Item key="2" icon={<VideoCameraOutlined />}>
+						<Link to="/dog-app">Dog App</Link>
+					</Menu.Item>,
+					<Menu.Item key="3" icon={<UploadOutlined />}>
+						<Link to="/other">Other Examples</Link>
+					</Menu.Item>,
+				]}
+			>
+				<Switch>
+					<Route path="/auth" component={AuthContainer} />
+					<Route path="/dog-app" component={RandomDogApp} />
+					<Route
+						path="/other"
+						render={() => {
+							return (
+								<>
+									<h1>Simple Greeting</h1>
+									<p>
+										Rendering a normal component using the GeneratorComponent
+										wrapper
+									</p>
+									<Greeting />
 
-			<h1>Dog App</h1>
-			<RandomDogApp />
+									<h1>Render a Promise</h1>
+									<p>
+										Rendering a Promise using the GeneratorComponent wrapper
+									</p>
+									<LazyRender message="I render after my promise resolves" />
 
-			<h1>Simple Greeting</h1>
-			<p>Rendering a normal component using the GeneratorComponent wrapper</p>
-			<Greeting />
+									<h1>User Tests</h1>
+									<p>Rendering using an async generator</p>
+									<UserContainer id={1} />
+									<UserContainer id={2} />
+									<UserContainer id={3} />
+									<UserContainer id={4} injectApi={fakeApiFail} />
 
-			<h1>Render a Promise</h1>
-			<p>Rendering a Promise using the GeneratorComponent wrapper</p>
-			<LazyRender message="I render after my promise resolves" />
+									<h1>Message Pipe</h1>
+									<p>
+										Rendering using an async generator that accumulates values
+									</p>
+									<MessagePipe />
 
-			<h1>User Tests</h1>
-			<p>Rendering using an async generator</p>
-			<UserContainer id={1} />
-			<UserContainer id={2} />
-			<UserContainer id={3} />
-			<UserContainer id={4} injectApi={fakeApiFail} />
+									<h1>Submit Form</h1>
+									<FormSubmit />
 
-			<h1>Message Pipe</h1>
-			<p>Rendering using an async generator that accumulates values</p>
-			<MessagePipe />
+									<h1>IPAddress</h1>
+									<IPAddress />
 
-			<h1>Submit Form</h1>
-			<FormSubmit />
+									<h1>Timer</h1>
+									<Timer key={timerKey} />
 
-			<h1>IPAddress</h1>
-			<IPAddress />
-
-			<h1>Timer</h1>
-			<Timer key={timerKey} />
-
-			<button onClick={() => setTimerKey(Date.now())}>Reset Timer</button>
-		</AppLayout>
+									<button onClick={() => setTimerKey(Date.now())}>
+										Reset Timer
+									</button>
+								</>
+							);
+						}}
+					/>
+				</Switch>
+			</AppLayout>
+		</Router>
 	);
 }

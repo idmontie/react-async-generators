@@ -32,6 +32,25 @@ function omit(obj: {[key: string]: any}, ...keys: string[]) {
 	return result;
 }
 
+function safeStringify(value: any, indent: number = 2): string {
+	try {
+		return JSON.stringify(value);
+	} catch (e) {
+		let cache: any[] = [];
+		const retVal = JSON.stringify(
+			value,
+			(key, value) =>
+				typeof value === "object" && value !== null
+					? cache.includes(value)
+						? undefined // Duplicate reference found, discard key
+						: cache.push(value) && value // Store value in our collection
+					: value,
+			indent,
+		);
+		return retVal;
+	}
+}
+
 const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 	const maybeIteratorRef = useRef<AnyGenerator<ReturnType> | null>(null);
 	const [comp, setComp] = useState<ReturnType | null>(null);
@@ -108,7 +127,7 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 		render,
 		step,
 		refresh,
-		JSON.stringify(omit(props, "children")),
+		safeStringify(omit(props, "children")),
 		props.children,
 	]);
 

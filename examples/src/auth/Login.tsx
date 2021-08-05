@@ -2,27 +2,19 @@ import React from "react";
 import {asyncGen, mutable} from "react-async-generators";
 import {Form, Input, Button} from "antd";
 import {User} from "./types";
+import {loginAsUser} from "./store/Users";
 
 interface LoginProps {
-	onLogin: (user: User) => void;
-}
-
-async function loginAsUser(username: string, _: string): Promise<User> {
-	return new Promise<User>((resolve) => {
-		setTimeout(() => {
-			resolve({
-				username,
-				id: 1,
-				name: "John Doe",
-			});
-		}, 1000);
-	});
+	onLogin?: (user: User) => void;
 }
 
 /**
  * Example of how setState would work
  */
-async function* Login({onLogin}: LoginProps, refresh: () => void) {
+async function* Login(
+	{onLogin = (_: User) => {}}: LoginProps,
+	refresh: () => void,
+) {
 	let loading = mutable<boolean>(false, refresh);
 
 	const onFinish = async (values: any) => {

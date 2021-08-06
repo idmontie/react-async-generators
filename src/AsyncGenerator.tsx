@@ -5,11 +5,10 @@ import React, {
 	useRef,
 	ReactElement,
 } from "react";
+import isDeepEqual from "fast-deep-equal/react";
 import {isIterator} from "./utilities/isIterator";
 import {isPromise} from "./utilities/isPromise";
 import {getDisplayName} from "./utilities/getDisplayName";
-import {omit} from "./utilities/omit";
-import {safeStringify} from "./utilities/safeStringify";
 import {Render, AnyGenerator} from "./types";
 
 export interface AsyncProps {
@@ -27,6 +26,11 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 	const maybeIteratorRef = useRef<AnyGenerator<ReturnType> | null>(null);
 	const [comp, setComp] = useState<ReturnType | null>(null);
 	const hasMounted = useRef<MountState>("beforemount");
+	const propsRef = useRef(props);
+
+	if (!isDeepEqual(propsRef.current, props)) {
+		propsRef.current = props;
+	}
 
 	const step = useCallback((result: IteratorResult<any>) => {
 		// Support both { val, done } and value.
@@ -99,13 +103,7 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 			let result = await iterator.next();
 			step(result);
 		}
-	}, [
-		render,
-		step,
-		refresh,
-		safeStringify(omit(props, "children")),
-		props.children,
-	]);
+	}, [render, step, refresh, propsRef.current]);
 
 	useEffect(() => {
 		hasMounted.current = "beforemount";

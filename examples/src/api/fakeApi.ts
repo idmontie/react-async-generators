@@ -5,7 +5,7 @@ const data = {
 	name: "Ivan",
 };
 
-export default async function fakeApi(n) {
+export default async function fakeApi(n: string) {
 	await wait(3000);
 
 	return {

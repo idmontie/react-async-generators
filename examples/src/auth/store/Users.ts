@@ -23,3 +23,12 @@ export async function loginAsUser(username: string, _: string): Promise<User> {
 		}, 1000);
 	});
 }
+
+export async function logout(): Promise<void> {
+	return new Promise<void>((resolve) => {
+		setTimeout(() => {
+			cache.value.set(null);
+			resolve();
+		}, 1000);
+	});
+}

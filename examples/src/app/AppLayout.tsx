@@ -9,7 +9,7 @@ const {Header, Sider, Content} = Layout;
 
 interface AppLayoutProps {
 	children?: React.ReactNode;
-	menuItems: () => React.ReactNode[];
+	menuItems: React.ReactNode[];
 }
 
 async function* AppLayout(
@@ -35,7 +35,7 @@ async function* AppLayout(
 				<Sider trigger={null} collapsible collapsed={collapsed.get()}>
 					<div className="logo" />
 					<Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-						{menuItems()}
+						{menuItems}
 					</Menu>
 				</Sider>
 				<Layout

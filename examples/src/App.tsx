@@ -20,28 +20,38 @@ import RandomDogApp from "./examples/DogApp";
 import AuthContainer from "./auth/AuthContainer";
 import AppLayout from "./app/AppLayout";
 import TagLifecycle from "./examples/TagLifecycle";
+import DynamicList from "./examples/DynamicList";
+import Home from "./home/Home";
+import {Preview} from "./editor";
 
 export default function App() {
 	const [timerKey, setTimerKey] = useState(0);
 
+	if (window.location.pathname === "/preview") {
+		return <Preview />;
+	}
+
 	return (
 		<Router>
 			<AppLayout
-				// TODO why does this crash if its not a function?
-				menuItems={() => [
-					<Menu.Item key="1" icon={<UserOutlined />}>
-						<Link to="/">Auth Example</Link>
+				menuItems={[
+					<Menu.Item key="home" icon={<UserOutlined />}>
+						<Link to="/">Home</Link>
 					</Menu.Item>,
-					<Menu.Item key="2" icon={<VideoCameraOutlined />}>
+					<Menu.Item key="auth" icon={<UserOutlined />}>
+						<Link to="/auth">Auth Example</Link>
+					</Menu.Item>,
+					<Menu.Item key="dog-app" icon={<VideoCameraOutlined />}>
 						<Link to="/dog-app">Dog App</Link>
 					</Menu.Item>,
-					<Menu.Item key="3" icon={<UploadOutlined />}>
+					<Menu.Item key="other" icon={<UploadOutlined />}>
 						<Link to="/other">Other Examples</Link>
 					</Menu.Item>,
 				]}
 			>
 				<Switch>
-					<Route path="/" exact component={AuthContainer} />
+					<Route path="/" exact component={Home} />
+					<Route path="/auth" component={AuthContainer} />
 					<Route path="/dog-app" component={RandomDogApp} />
 					<Route
 						path="/other"
@@ -57,6 +67,9 @@ export default function App() {
 
 									<h1>Mouse Events</h1>
 									<TagLifecycle />
+
+									<h1>Scroll to top</h1>
+									<DynamicList />
 
 									<h1>Render a Promise</h1>
 									<p>

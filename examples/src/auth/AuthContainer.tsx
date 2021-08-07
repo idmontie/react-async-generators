@@ -2,6 +2,7 @@ import React from "react";
 import {asyncGen} from "react-async-generators";
 import Login from "./Login";
 import {getCurrentUser} from "./store/Users";
+import UserInfo from "./UserInfo";
 
 async function* AuthContainer(_: {}, refresh: () => void) {
 	const currentUser = getCurrentUser(refresh);
@@ -12,12 +13,7 @@ async function* AuthContainer(_: {}, refresh: () => void) {
 		if (!user.value) {
 			yield <Login />;
 		} else {
-			yield (
-				<div>
-					<div>Email: {user.value?.username}</div>
-					<div>Name: {user.value?.name}</div>
-				</div>
-			);
+			yield <UserInfo user={user.value} />;
 		}
 	}
 }

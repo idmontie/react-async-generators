@@ -1,8 +1,14 @@
 import React from "react";
 import {asyncGen} from "react-async-generators";
 import fakeApi from "../api/fakeApi";
+import {User} from "../auth/types";
 
-async function* UserContainer({id, injectApi}) {
+interface UserContainerProps {
+	id: string;
+	injectApi: (id: string) => Promise<User>;
+}
+
+async function* UserContainer({id, injectApi}: UserContainerProps) {
 	yield <div>Loading</div>;
 
 	try {
@@ -14,7 +20,8 @@ async function* UserContainer({id, injectApi}) {
 			</div>
 		);
 	} catch (e) {
-		yield <div>{e.message}</div>;
+		const error = e as Error;
+		yield <div>{error.message}</div>;
 	}
 }
 

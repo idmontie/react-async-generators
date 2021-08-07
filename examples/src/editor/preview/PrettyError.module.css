@@ -1,0 +1,19 @@
+.wrapper {
+  font-family: sans-serif;
+  font-weight: normal;
+}
+
+.heading {
+  margin: 0 0 1rem;
+  font-size: 2em;
+  color: palevioletred;
+}
+
+.reason {
+  margin: 0;
+}
+
+.stack {
+  white-space: pre;
+  font-family: monospace;
+}

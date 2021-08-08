@@ -22,15 +22,24 @@ type MountState = "beforemount" | "unmounted" | "mounted";
 
 type ReturnType = ReactElement | JSX.Element;
 
+// Exported for testing purposes
+export function useDeepEqualProps(props: {[x: string]: any}) {
+	const propsRef = useRef(props);
+	const [propsUpdated, setPropsUpdated] = useState(Date.now());
+
+	if (!isDeepEqual(propsRef.current, props)) {
+		propsRef.current = props;
+		setPropsUpdated(Date.now());
+	}
+
+	return [propsUpdated, propsRef];
+}
+
 const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 	const maybeIteratorRef = useRef<AnyGenerator<ReturnType> | null>(null);
 	const [comp, setComp] = useState<ReturnType | null>(null);
 	const hasMounted = useRef<MountState>("beforemount");
-	const propsRef = useRef(props);
-
-	if (!isDeepEqual(propsRef.current, props)) {
-		propsRef.current = props;
-	}
+	const [propsUpdated] = useDeepEqualProps(props);
 
 	const step = useCallback((result: IteratorResult<any>) => {
 		// Support both { val, done } and value.
@@ -103,7 +112,7 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 			let result = await iterator.next();
 			step(result);
 		}
-	}, [render, step, refresh, propsRef.current]);
+	}, [render, step, refresh, propsUpdated]);
 
 	useEffect(() => {
 		hasMounted.current = "beforemount";

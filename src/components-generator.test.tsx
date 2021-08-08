@@ -1,6 +1,6 @@
 import React from "react";
 import {render, screen, waitFor} from "@testing-library/react";
-import AsyncGenerator from "./AsyncGenerator";
+import AsyncGenerator, {asyncGen} from "./AsyncGenerator";
 
 describe("generator components", () => {
 	test("basic", async () => {
@@ -10,7 +10,9 @@ describe("generator components", () => {
 			yield <span>{message} 3</span>;
 		}
 
-		const {container} = render(<AsyncGenerator render={Component} message="Hello" />);
+		const {container} = render(
+			<AsyncGenerator render={Component} message="Hello" />,
+		);
 		expect(container.innerHTML).toEqual("");
 		await waitFor(() => expect(screen.getAllByText("Hello 3")).toHaveLength(1));
 		expect(screen.getAllByText("Hello 3")).toHaveLength(1);
@@ -25,7 +27,9 @@ describe("generator components", () => {
 			yield <span>{message} 3</span>;
 		}
 
-		const {container} = render(<AsyncGenerator render={Component} message="Hello" />);
+		const {container} = render(
+			<AsyncGenerator render={Component} message="Hello" />,
+		);
 		expect(container.innerHTML).toEqual("");
 		await waitFor(() => expect(screen.getAllByText("Hello 1")).toHaveLength(1));
 		expect(screen.getAllByText("Hello 1")).toHaveLength(1);
@@ -44,7 +48,9 @@ describe("generator components", () => {
 			yield <span>{message} 3</span>;
 		}
 
-		const {container} = render(<AsyncGenerator render={Component} message="Hello" />);
+		const {container} = render(
+			<AsyncGenerator render={Component} message="Hello" />,
+		);
 		expect(container.innerHTML).toEqual("");
 		await waitFor(() => expect(screen.getAllByText("Hello 1")).toHaveLength(1));
 		expect(screen.getAllByText("Hello 1")).toHaveLength(1);
@@ -71,7 +77,9 @@ describe("generator components", () => {
 			}
 		}
 
-		const {container} = render(<AsyncGenerator render={Component} message="Hello" />);
+		const {container} = render(
+			<AsyncGenerator render={Component} message="Hello" />,
+		);
 		expect(container.innerHTML).toEqual("");
 
 		await waitFor(() => expect(screen.getAllByText("Hello 0")).toHaveLength(1));
@@ -85,5 +93,30 @@ describe("generator components", () => {
 
 		await waitFor(() => expect(screen.getAllByText("Hello 1")).toHaveLength(1));
 		expect(screen.getAllByText("Hello 1")).toHaveLength(1);
+	});
+
+	test("controlled generator re-renders when props deep change", async () => {
+		const MyComponent = asyncGen<{messages: string[]}>(function* (
+			{messages}: {messages: string[]},
+			_refresh: () => void,
+		) {
+			while (true) {
+				yield <span>{messages.join(" ")}</span>;
+			}
+		});
+
+		let messages = ["Hello", "Goodbye"];
+		const {rerender} = render(<MyComponent messages={messages} />);
+
+		await waitFor(() =>
+			expect(screen.getAllByText("Hello Goodbye")).toHaveLength(1),
+		);
+		expect(screen.getAllByText("Hello Goodbye")).toHaveLength(1);
+
+		messages = messages.filter((m) => m !== "Goodbye");
+		rerender(<MyComponent messages={messages} />);
+
+		await waitFor(() => expect(screen.getAllByText("Hello")).toHaveLength(1));
+		expect(screen.getAllByText("Hello")).toHaveLength(1);
 	});
 });

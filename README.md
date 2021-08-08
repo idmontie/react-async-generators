@@ -54,6 +54,8 @@ const App = () => (
 There are a set of examples showing different types of components in the `./examples` folder
 using a create-react-app application.
 
+TODO MVC example is based on the code from [Crank.js's implementation](https://codesandbox.io/s/crank-todomvc-k6s0x?file=/src/index.js).
+
 ## Drawbacks
 
 * Still looking into how you would blend async generators and hooks together

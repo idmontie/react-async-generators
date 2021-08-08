@@ -9,7 +9,9 @@ describe("sync function component", () => {
 			return <span>{message}</span>;
 		}
 
-		const {container} = render(<AsyncGenerator render={Component} message="Hello" />);
+		const {container} = render(
+			<AsyncGenerator render={Component} message="Hello" />,
+		);
 		expect(container.innerHTML).toEqual("");
 
 		await waitFor(

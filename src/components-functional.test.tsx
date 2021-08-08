@@ -29,9 +29,13 @@ describe("sync function component", () => {
 			return <ChildTag>Hello world</ChildTag>;
 		}
 
-		let {container} = render(<AsyncGenerator render={Component} ChildTag="div" />);
+		let {container} = render(
+			<AsyncGenerator render={Component} ChildTag="div" />,
+		);
 		expect(container.innerHTML).toEqual("<div>Hello world</div>");
-		({container} = render(<AsyncGenerator render={Component} ChildTag="span" />));
+		({container} = render(
+			<AsyncGenerator render={Component} ChildTag="span" />,
+		));
 		expect(container.innerHTML).toEqual("<span>Hello world</span>");
 	});
 
@@ -61,7 +65,9 @@ describe("sync function component", () => {
 			return <AsyncGenerator render={Child} message={message} />;
 		}
 
-		const {container} = render(<AsyncGenerator render={Parent} message="Hello 1" />);
+		const {container} = render(
+			<AsyncGenerator render={Parent} message="Hello 1" />,
+		);
 
 		expect(container.innerHTML).toEqual("");
 		await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
@@ -79,7 +85,9 @@ describe("sync function component", () => {
 
 		const mock = jest.spyOn(console, "error").mockImplementation();
 		try {
-			const {unmount} = render(<AsyncGenerator render={Component} message="Hello" />);
+			const {unmount} = render(
+				<AsyncGenerator render={Component} message="Hello" />,
+			);
 
 			expect(mock).toHaveBeenCalledTimes(0);
 			expect(screen.getAllByText("Hello")).toHaveLength(1);

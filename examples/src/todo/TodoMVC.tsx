@@ -1,98 +1,13 @@
 import {createRef, SyntheticEvent} from "react";
-import {asyncGen, createCache, mutable} from "react-async-generators";
+import {asyncGen, mutable} from "react-async-generators";
+import {Todo} from "./types";
 
 import "./TodoMVC.css";
 
-interface Todo {
-	id: number;
-	title: string;
-	completed: boolean;
-}
+import {getTodosCache, todoActions} from "./todosStore";
 
+// TODO use from next version of react-async-generators
 type RefreshType = () => void;
-
-function createCacheWithLocalStorage<T>(storageKey: string, defaultValue: T) {
-	const possibleLocalStorage = localStorage.getItem(storageKey) || "{}";
-	let initialValue = JSON.parse(possibleLocalStorage);
-
-	if (!(Array.isArray(initialValue) && initialValue.length)) {
-		initialValue = defaultValue;
-	}
-
-	const {cache, addListener, ...rest} = createCache<T>(initialValue);
-
-	addListener(() => {
-		localStorage.setItem(storageKey, JSON.stringify(todoCache.value.get()));
-	});
-
-	return {cache, addListener, ...rest};
-}
-
-const {cache: todoCache, getValue: getTodoCache} = createCacheWithLocalStorage<
-	Todo[]
->("todo-mvc", []);
-
-const todoActions = {
-	create(title: string) {
-		const todo: Todo = {
-			id: Date.now(),
-			title,
-			completed: false,
-		};
-
-		todoCache.value.set([...todoCache.value.get(), todo]);
-	},
-	toggle(todo: Todo) {
-		const todos = todoCache.value.get();
-		const nextTodos = todos.map((t: Todo) => {
-			if (t.id === todo.id) {
-				return {
-					...t,
-					completed: !todo.completed,
-				};
-			}
-
-			return t;
-		});
-
-		todoCache.value.set(nextTodos);
-	},
-	toggleAll(completed: boolean) {
-		todoCache.value.set(
-			todoCache.value.get().map((t: Todo) => ({
-				...t,
-				completed,
-			})),
-		);
-	},
-	edit(todo: Todo, title: string) {
-		const todos = todoCache.value.get();
-		const nextTodos = todos.map((t: Todo) => {
-			if (t.id === todo.id) {
-				return {
-					...t,
-					title,
-				};
-			}
-
-			return t;
-		});
-		todoCache.value.set(nextTodos);
-	},
-	destroy(todo: Todo) {
-		const todos = todoCache.value.get();
-		const nextTodos = todos.filter((t: Todo) => t.id !== todo.id);
-
-		// TODO: Hack to force a refresh
-		todoCache.value.set([...nextTodos]);
-	},
-	clearCompleted() {
-		const todos = todoCache.value.get();
-		const nextTodos = todos.filter((t: Todo) => !t.completed);
-
-		todoCache.value.set(nextTodos);
-	},
-};
 
 const Header = asyncGen(function* Header() {
 	const handleKeyDown = (
@@ -136,6 +51,7 @@ const TodoItem = asyncGen<{todo: Todo}>(function* TodoItem(
 
 	const handleDoubleClick = () => {
 		active.set(true);
+		// Focus once the component is rendered
 		setTimeout(() => {
 			inputRef.current?.focus();
 		}, 0);
@@ -204,7 +120,7 @@ const TodoItem = asyncGen<{todo: Todo}>(function* TodoItem(
 	}
 });
 
-const Main = function Main({todos, filter}: {todos: Todo[]; filter: string}) {
+function Main({todos, filter}: {todos: Todo[]; filter: string}) {
 	const completed = todos.every((todo) => todo.completed);
 
 	const handleToggleAll = () => {
@@ -226,7 +142,7 @@ const Main = function Main({todos, filter}: {todos: Todo[]; filter: string}) {
 				className="toggle-all"
 				type="checkbox"
 				checked={completed}
-				onClick={handleToggleAll}
+				onChange={handleToggleAll}
 			/>
 			<label htmlFor="toggle-all">Mark all as complete</label>
 			<ul className="todo-list">
@@ -236,7 +152,7 @@ const Main = function Main({todos, filter}: {todos: Todo[]; filter: string}) {
 			</ul>
 		</section>
 	);
-};
+}
 
 function Filters({filter}: {filter: string}) {
 	return (
@@ -284,39 +200,31 @@ function Footer({todos, filter}: {todos: Todo[]; filter: string}) {
 	);
 }
 
+function getFilterFromHash(hash: string) {
+	switch (hash) {
+		case "#/active": {
+			return "active";
+		}
+		case "#/completed": {
+			return "completed";
+		}
+		default:
+			return "";
+	}
+}
+
 async function* TodoMVC(_: {}, refresh: RefreshType) {
-	const todoGenerator = getTodoCache(refresh);
-	const filter = mutable<string>("", refresh);
+	const todoGenerator = getTodosCache(refresh);
+	let initialFilter = getFilterFromHash(window.location.hash);
 
-	const handleHashChange = (e: any) => {
-		const hash = window.location.hash;
-		switch (hash) {
-			case "#/active": {
-				filter.set("active");
-				break;
-			}
-			case "#/completed": {
-				filter.set("completed");
-				break;
-			}
-			case "#/": {
-				filter.set("");
-				break;
-			}
-			default: {
-				filter.set("");
-				window.location.hash = "#/";
-			}
-		}
+	const filter = mutable<string>(initialFilter, refresh);
 
-		if (e !== null) {
-			refresh();
-		}
+	const handleHashChange = () => {
+		filter.set(getFilterFromHash(window.location.hash));
 	};
 
-	// Get initial route
-	handleHashChange(null);
 	window.addEventListener("hashchange", handleHashChange);
+
 	try {
 		while (true) {
 			const todos = await todoGenerator.next();

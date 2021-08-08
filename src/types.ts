@@ -10,3 +10,5 @@ export type Render = {
 	(props: any, refresh: () => void): AnyGenerator<any>;
 	displayName?: string;
 };
+
+export type RefreshType = () => void;

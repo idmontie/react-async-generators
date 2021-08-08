@@ -139,7 +139,7 @@ const AsyncGenerator = ({render, ...props}: AsyncProps) => {
 
 (AsyncGenerator as React.FC).displayName = "AsyncGenerator";
 
-export function asyncGen<T>(render: Render) {
+export function asyncGen<T = any>(render: Render) {
 	const NamedAsync = Async.bind({});
 	NamedAsync.displayName = getDisplayName(render);
 	const Comp = (props: T) => <NamedAsync render={render} {...props} />;

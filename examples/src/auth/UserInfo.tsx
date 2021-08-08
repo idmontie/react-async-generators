@@ -28,7 +28,7 @@ function asyncAction<T>(
 		try {
 			result = await cb(...args);
 		} catch (e) {
-			error.set(e);
+			error.set(e as Error);
 		} finally {
 			loading.set(false);
 		}

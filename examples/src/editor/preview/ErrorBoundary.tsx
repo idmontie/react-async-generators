@@ -4,18 +4,35 @@ import PropTypes from "prop-types";
 import PrettyError from "./PrettyError";
 import {normalizeError} from "../utilities/utils";
 
-export default class ErrorBoundary extends PureComponent {
+interface ErrorBoundaryProps {
+	children: React.ReactNode;
+	error?: Error | null;
+	lastUpdated: number;
+}
+
+interface ErrorBoundaryState {
+	error: Error | null;
+	lastUpdated: number;
+}
+
+export default class ErrorBoundary extends PureComponent<
+	ErrorBoundaryProps,
+	ErrorBoundaryState
+> {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
 	};
 
-	static getDerivedStateFromError(error) {
+	static getDerivedStateFromError(error: Error) {
 		return {
 			error: normalizeError(error),
 		};
 	}
 
-	static getDerivedStateFromProps(props, state) {
+	static getDerivedStateFromProps(
+		props: ErrorBoundaryProps,
+		state: ErrorBoundaryState,
+	) {
 		return {
 			error:
 				props.error ||
@@ -24,10 +41,10 @@ export default class ErrorBoundary extends PureComponent {
 		};
 	}
 
-	state = {
+	state: ErrorBoundaryState = {
 		error: null,
 		// eslint-disable-next-line react/no-unused-state
-		lastUpdated: null,
+		lastUpdated: 0,
 	};
 
 	render() {

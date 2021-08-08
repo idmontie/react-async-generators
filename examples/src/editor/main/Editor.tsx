@@ -4,20 +4,20 @@ import CodeEditor from "./CodeEditor";
 import CodeTarget from "./CodeTarget";
 import styles from "./Editor.module.css";
 
-const Editor = ({defaultCode}) => {
-	const targetRef = useRef();
-	const queuedMessageRef = useRef();
+const Editor = ({defaultCode}: {defaultCode: string}) => {
+	const targetRef = useRef<HTMLIFrameElement | null>(null);
+	const queuedMessageRef = useRef<string | null>(null);
 	const [targetLoaded, setTargetLoaded] = useState(false);
 
 	const handleUpdate = () => {
 		// no op for now
 	};
 
-	const handleSendMessage = (msg) => {
+	const handleSendMessage = (msg: string) => {
 		const target = targetRef.current;
 
 		if (target && targetLoaded) {
-			target.contentWindow.postMessage(JSON.stringify(msg), "*");
+			target.contentWindow?.postMessage(JSON.stringify(msg), "*");
 		} else {
 			queuedMessageRef.current = msg;
 		}

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import classes from "./PrettyError.module.css";
 
-const PrettyError = ({error}) => {
+const PrettyError = ({error}: {error: Error}) => {
 	const cutIndex = error.message.indexOf("\n");
 	const heading = error.name;
 	const reason =

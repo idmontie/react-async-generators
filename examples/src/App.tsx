@@ -23,6 +23,7 @@ import TagLifecycle from "./examples/TagLifecycle";
 import DynamicList from "./examples/DynamicList";
 import Home from "./home/Home";
 import {Preview} from "./editor";
+import TodoMVC from "./todo/TodoMVC";
 
 export default function App() {
 	const [timerKey, setTimerKey] = useState(0);
@@ -44,6 +45,9 @@ export default function App() {
 					<Menu.Item key="dog-app" icon={<VideoCameraOutlined />}>
 						<Link to="/dog-app">Dog App</Link>
 					</Menu.Item>,
+					<Menu.Item key="todo-mvc" icon={<VideoCameraOutlined />}>
+						<Link to="/todo">TodoMVC</Link>
+					</Menu.Item>,
 					<Menu.Item key="other" icon={<UploadOutlined />}>
 						<Link to="/other">Other Examples</Link>
 					</Menu.Item>,
@@ -53,6 +57,7 @@ export default function App() {
 					<Route path="/" exact component={Home} />
 					<Route path="/auth" component={AuthContainer} />
 					<Route path="/dog-app" component={RandomDogApp} />
+					<Route path="/todo" component={TodoMVC} />
 					<Route
 						path="/other"
 						render={() => {
@@ -79,10 +84,10 @@ export default function App() {
 
 									<h1>User Tests</h1>
 									<p>Rendering using an async generator</p>
-									<UserContainer id={1} />
-									<UserContainer id={2} />
-									<UserContainer id={3} />
-									<UserContainer id={4} injectApi={fakeApiFail} />
+									<UserContainer id="1" />
+									<UserContainer id="2" />
+									<UserContainer id="3" />
+									<UserContainer id="4" injectApi={fakeApiFail} />
 
 									<h1>Message Pipe</h1>
 									<p>

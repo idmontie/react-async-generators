@@ -1,4 +1,3 @@
-import React from "react";
 import {asyncGen} from "react-async-generators";
 
 function Greeting({name = "World"}) {

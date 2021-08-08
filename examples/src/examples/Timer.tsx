@@ -1,7 +1,6 @@
-import React from "react";
 import {asyncGen} from "react-async-generators";
 
-function* Timer(_, refresh) {
+function* Timer(_: {}, refresh: () => void) {
 	let seconds = 0;
 
 	const interval = setInterval(() => {

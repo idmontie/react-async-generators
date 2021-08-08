@@ -1,10 +1,10 @@
 import React from "react";
 import {asyncGen} from "react-async-generators";
 
-async function* FormSubmit(_, refresh) {
+async function* FormSubmit(_: {}, refresh: () => void) {
 	let status = "";
 
-	const handleSubmit = (e) => {
+	const handleSubmit = (e: React.SyntheticEvent) => {
 		e.preventDefault();
 
 		status = "Submitting";

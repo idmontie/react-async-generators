@@ -5,7 +5,7 @@ import {User} from "../auth/types";
 
 interface UserContainerProps {
 	id: string;
-	injectApi: (id: string) => Promise<User>;
+	injectApi?: (id: string) => Promise<User>;
 }
 
 async function* UserContainer({id, injectApi}: UserContainerProps) {
@@ -25,4 +25,4 @@ async function* UserContainer({id, injectApi}: UserContainerProps) {
 	}
 }
 
-export default asyncGen(UserContainer);
+export default asyncGen<UserContainerProps>(UserContainer);

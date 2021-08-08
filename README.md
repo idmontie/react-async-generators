@@ -58,4 +58,12 @@ using a create-react-app application.
 
 * Still looking into how you would blend async generators and hooks together
 * Related to the above point, you only get one lifecycle method to work with: `refresh`.
-* Currently doesn't handle refs
+* ~~Currently doesn't handle refs~~ (Handle refs by using `React.ref()`).
+
+## FAQ
+
+**Question: My component isn't re-rendering when the props change!**
+
+Answer: If your props are equal due to a `fast-deep-equal` check, then the component
+will not update with new props. This commonly happens when you mutate an object
+instead of treating objects as immutable.

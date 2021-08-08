@@ -1,3 +1,4 @@
+import {User} from "../auth/types";
 import wait from "../utilities/wait";
 
 const data = {
@@ -14,7 +15,7 @@ export default async function fakeApi(n: string) {
 	};
 }
 
-export async function fakeApiFail() {
+export async function fakeApiFail(_: string): Promise<User> {
 	await wait(5000);
 
 	throw new Error("failed to load user");

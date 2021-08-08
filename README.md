@@ -1,5 +1,7 @@
 # react-async-generators
 
+[![Run Unit Tests and Lint Files](https://github.com/idmontie/react-async-generators/actions/workflows/test.yml/badge.svg)](https://github.com/idmontie/react-async-generators/actions/workflows/test.yml)
+
 Use async generators as if they were components. Supports wrapping functional components,
 async components, generator components, and async generator components.
 

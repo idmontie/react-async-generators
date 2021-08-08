@@ -25,21 +25,21 @@ type ReturnType = ReactElement | JSX.Element;
 // Exported for testing purposes
 export function useDeepEqualProps(props: {[x: string]: any}) {
 	const propsRef = useRef(props);
-	const [propsUpdated, setPropsUpdated] = useState(Date.now());
+	const propsUpdatedRef = useRef(Date.now());
 
 	if (!isDeepEqual(propsRef.current, props)) {
 		propsRef.current = props;
-		setPropsUpdated(Date.now());
+		propsUpdatedRef.current = Date.now();
 	}
 
-	return [propsUpdated, propsRef];
+	return [propsUpdatedRef, propsRef];
 }
 
 const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 	const maybeIteratorRef = useRef<AnyGenerator<ReturnType> | null>(null);
 	const [comp, setComp] = useState<ReturnType | null>(null);
 	const hasMounted = useRef<MountState>("beforemount");
-	const [propsUpdated] = useDeepEqualProps(props);
+	const [propsUpdatedRef] = useDeepEqualProps(props);
 
 	const step = useCallback((result: IteratorResult<any>) => {
 		// Support both { val, done } and value.
@@ -69,6 +69,7 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 		if (isIterator(maybeIteratorRef.current)) {
 			const iterator = maybeIteratorRef.current as IterableIterator<any>;
 			let result = await iterator.next();
+			console.log("refresh was called with a step");
 			step(result);
 		}
 	}, [step]);
@@ -112,10 +113,9 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 			let result = await iterator.next();
 			step(result);
 		}
-	}, [render, step, refresh, propsUpdated]);
+	}, [render, step, refresh, propsUpdatedRef.current]);
 
 	useEffect(() => {
-		hasMounted.current = "beforemount";
 		iterate();
 
 		return () => {

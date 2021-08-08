@@ -119,8 +119,6 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 		iterate();
 
 		return () => {
-			hasMounted.current = "unmounted";
-
 			// Attempt to call any `finally` clauses in the iterator
 			if (maybeIteratorRef.current) {
 				const g = maybeIteratorRef.current as IterableIterator<any>;
@@ -131,6 +129,12 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 			}
 		};
 	}, [iterate]);
+
+	useEffect(() => {
+		return () => {
+			hasMounted.current = "unmounted";
+		};
+	}, []);
 
 	if (comp) {
 		hasMounted.current = "mounted";

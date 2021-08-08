@@ -1,13 +1,10 @@
 import {createRef, SyntheticEvent} from "react";
-import {asyncGen, mutable} from "react-async-generators";
+import {asyncGen, mutable, RefreshType} from "react-async-generators";
 import {Todo} from "./types";
 
 import "./TodoMVC.css";
 
 import {getTodosCache, todoActions} from "./todosStore";
-
-// TODO use from next version of react-async-generators
-type RefreshType = () => void;
 
 const Header = asyncGen(function* Header() {
 	const handleKeyDown = (
@@ -87,6 +84,7 @@ const TodoItem = asyncGen<{todo: Todo}>(function* TodoItem(
 	};
 
 	while (true) {
+		console.log("todo", todo);
 		const classes = [];
 		if (active.get()) {
 			classes.push("editing");

@@ -69,7 +69,6 @@ const Async: React.FC<AsyncProps> = ({render, ...props}: AsyncProps) => {
 		if (isIterator(maybeIteratorRef.current)) {
 			const iterator = maybeIteratorRef.current as IterableIterator<any>;
 			let result = await iterator.next();
-			console.log("refresh was called with a step");
 			step(result);
 		}
 	}, [step]);

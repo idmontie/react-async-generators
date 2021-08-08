@@ -6,12 +6,12 @@ import {useDeepEqualProps} from "./AsyncGenerator";
 describe("dependencies", () => {
 	describe("deep equals", () => {
 		const Component = function (props: {messages: string[]}) {
-			const [propsUpdated] = useDeepEqualProps(props);
+			const [propsUpdatedRef] = useDeepEqualProps(props);
 			const [str, setStr] = useState("");
 
 			useEffect(() => {
 				setStr(props.messages.join(" "));
-			}, [propsUpdated]);
+			}, [propsUpdatedRef.current]);
 
 			return (
 				<div>

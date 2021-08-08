@@ -3,9 +3,11 @@ import React, {useState} from "react";
 import {Menu} from "antd";
 import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 import {
+	HomeOutlined,
+	PictureOutlined,
 	UserOutlined,
-	VideoCameraOutlined,
-	UploadOutlined,
+	CheckSquareOutlined,
+	OrderedListOutlined,
 } from "@ant-design/icons";
 import "./styles.css";
 import Greeting from "./examples/Greeting";
@@ -36,19 +38,19 @@ export default function App() {
 		<Router>
 			<AppLayout
 				menuItems={[
-					<Menu.Item key="home" icon={<UserOutlined />}>
+					<Menu.Item key="home" icon={<HomeOutlined />}>
 						<Link to="/">Home</Link>
 					</Menu.Item>,
 					<Menu.Item key="auth" icon={<UserOutlined />}>
 						<Link to="/auth">Auth Example</Link>
 					</Menu.Item>,
-					<Menu.Item key="dog-app" icon={<VideoCameraOutlined />}>
+					<Menu.Item key="dog-app" icon={<PictureOutlined />}>
 						<Link to="/dog-app">Dog App</Link>
 					</Menu.Item>,
-					<Menu.Item key="todo-mvc" icon={<VideoCameraOutlined />}>
+					<Menu.Item key="todo-mvc" icon={<CheckSquareOutlined />}>
 						<Link to="/todo">TodoMVC</Link>
 					</Menu.Item>,
-					<Menu.Item key="other" icon={<UploadOutlined />}>
+					<Menu.Item key="other" icon={<OrderedListOutlined />}>
 						<Link to="/other">Other Examples</Link>
 					</Menu.Item>,
 				]}

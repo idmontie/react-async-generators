@@ -8,7 +8,6 @@ import {transform as babelTransform} from "@babel/standalone";
  * Only a subset of plugins are available, see: https://babeljs.io/docs/en/6.26.3/babylon
  */
 export const ast = (code: string) => {
-	console.log(code);
 	return parse(code, {
 		sourceType: "module",
 		plugins: [
@@ -89,16 +88,6 @@ export const wrap = (scope: Scope) => (code: string) => {
 
 	if (missingAsyncGenWrapper) {
 		const matches = asyncGenPattern.exec(code);
-
-		console.log(
-			[
-				`((${Object.keys(scope).join(", ")}) => {`,
-				`  ${code}`,
-				`  return ${matches ? matches[1] : ""};`,
-				"});",
-			].join("\n"),
-		);
-
 		return [
 			`((${Object.keys(scope).join(", ")}) => {`,
 			`  ${code}`,
